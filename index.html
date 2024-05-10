@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="description" content="Play Tankken in your browser!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+      <link rel="stylesheet" href="style.css" />
+    <title>Tankken</title>
+     <!-- Social embed image -->
+     <meta property="og:image" content="https://tankken.github.io/favicon.png">
+     <meta property="og:image:type" content="image/png">
+     <meta property="og:image:width" content="4096">
+     <meta property="og:image:height" content="4096">
+  </head>
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <canvas id="unity-canvas" style="background: #231F20"></canvas>
+    <script src="Build/Tankken-webgl.loader.js"></script>
+    <script>
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/Tankken-webgl.data",
+        frameworkUrl: "Build/Tankken-webgl.framework.js",
+        codeUrl: "Build/Tankken-webgl.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "RRSoftware",
+        productName: "Tankken",
+        productVersion: "0.0.9",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>
