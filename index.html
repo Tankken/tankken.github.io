@@ -9,26 +9,93 @@
       <link rel="stylesheet" href="style.css" />
     <title>Tankken</title>
      <!-- Social embed image -->
-     <meta property="og:image" content="https://tankken.github.io/favicon.png">
+     <meta property="og:image" content="/favicon.png">
      <meta property="og:image:type" content="image/png">
      <meta property="og:image:width" content="4096">
      <meta property="og:image:height" content="4096">
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <div class="loadingview" id="loadingparent">
+      <div></div>
+      <div class="spinnerholder">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div>
+          <div class=spinnerparent id="spinnerparent">
+            <img class="spinner" id="spinner" src="spinner.svg">
+            <span id="errorbody" style="display:none">
+              <h1>⛔</h1>
+              This game requires a browser that supports <a target="_blank" href="https://caniuse.com/webgpu">WebGPU</a>.
+            </span>
+          </div>
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div></div>
+      <div></div>
+      <div class="loadingframe" id="loadingframe">
+        <div class="loadingbar" id="loadingbar"></div>
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     <canvas id="unity-canvas" style="background: #231F20"></canvas>
-    <script src="Build/Tankken-webgl.loader.js"></script>
+    <script src="Build/Tankken-WebGL.loader.js"></script>
     <script>
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/Tankken-webgl.data",
-        frameworkUrl: "Build/Tankken-webgl.framework.js",
-        codeUrl: "Build/Tankken-webgl.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "RRSoftware",
-        productName: "Tankken",
-        productVersion: "0.0.9",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      });
+      function start(){
+        function setBarPercent(progress){
+          document.getElementById('loadingbar').style.right = `${(1-progress) * 100}%`
+        }
+
+        function unitySetLoaderProgressTo(progress){
+          setBarPercent(progress)
+          if (progress > 0.99){
+            document.getElementById("loadingparent").style.opacity = "0";
+            setTimeout(() => {
+              document.getElementById("loadingparent").remove();
+            },500)
+          }
+        }
+        setTimeout(() => {
+          document.getElementById("loadingparent").style.opacity = "1";
+        }, 10);
+
+        function fail(){
+          document.getElementById("spinnerparent").style.animation = "none"
+          document.getElementById("spinner").remove()
+          document.getElementById("loadingbar").style.backgroundColor = "red"
+          document.getElementById("errorbody").style.display=""
+          setTimeout(() => {
+            setBarPercent(1)
+          }, 10);
+        }
+
+        if (!navigator.gpu) {
+          fail();
+          return;
+        }
+      
+
+        createUnityInstance(document.querySelector("#unity-canvas"), {
+          dataUrl: "Build/Tankken-WebGL.data.unityweb",
+          frameworkUrl: "Build/Tankken-WebGL.framework.js.unityweb",
+          codeUrl: "Build/Tankken-WebGL.wasm.unityweb",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "RRSoftware",
+          productName: "Tankken",
+          // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+          // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+        }, (progress) => unitySetLoaderProgressTo(progress));
+        
+      }
+      start()
     </script>
   </body>
 </html>
